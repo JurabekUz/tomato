@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
 
     'base',
-    'model',
+    'model_files',
     'users'
 
 
