@@ -11,8 +11,8 @@ class DataModel(BaseModel):
 
 class DataClass(BaseModel):
     data_model = models.ForeignKey(DataModel, on_delete=models.CASCADE, related_name='classes', verbose_name=_('Model'))
-    title = models.CharField(max_length=250, verbose_name=_('Nomi'))
-    label = models.CharField(max_length=250, verbose_name=_('Label'))
+    title = models.CharField(max_length=250, verbose_name=_('Nomi'), unique=True)
+    label = models.CharField(max_length=250, verbose_name=_('Label'), unique=True)
     description = models.TextField(blank=True, null=True, verbose_name=_('Tavsif/Izoh'))
 
 

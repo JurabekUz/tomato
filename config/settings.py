@@ -30,6 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+SHOW_SWAGGER=True
 
 # Application definition
 
@@ -44,14 +45,19 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # 3rd party
     "corsheaders",
     "rest_framework_simplejwt",
     'drf_spectacular',
+    'tensorflow',
+    'numpy',
+    'keras',
 
+    # apps
     'base',
-    'model_files',
-    'users'
-
+    'users',
+    'model',
+    'services',
 
 ]
 
@@ -149,12 +155,17 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL = 'users.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 
 JAZZMIN_SETTINGS = {
@@ -187,12 +198,11 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'Tomato API',
     'DESCRIPTION': 'Our project description',
     'VERSION': '1.0.0',
-    'SCHEMA_PATH_PREFIX': r'/api/v[0-9]',
+    'SCHEMA_PATH_PREFIX': r'/api/',
     'SERVE_INCLUDE_SCHEMA': False,
     'SERVE_PERMISSIONS': ['rest_framework.permissions.AllowAny'],
     'SERVE_AUTHENTICATION': [],
     'POSTPROCESSING_HOOKS': [],
-    'SWAGGER_UI_DIST': 'https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.11.5'
 
 }
 
