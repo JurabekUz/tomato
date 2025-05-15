@@ -8,11 +8,17 @@ class DataModel(BaseModel):
     title = models.CharField(max_length=250, verbose_name=_('Nomi'))
     description = models.TextField(blank=True, null=True, verbose_name=_('Tavsif/Izoh'))
 
+    def __str__(self):
+        return self.title
+
 
 class DataClass(BaseModel):
     data_model = models.ForeignKey(DataModel, on_delete=models.CASCADE, related_name='classes', verbose_name=_('Model'))
-    title = models.CharField(max_length=250, verbose_name=_('Nomi'), unique=True)
-    label = models.CharField(max_length=250, verbose_name=_('Label'), unique=True)
+    title = models.CharField(max_length=250, verbose_name=_('Nomi'))
+    index = models.PositiveIntegerField(verbose_name=_('Index'))
     description = models.TextField(blank=True, null=True, verbose_name=_('Tavsif/Izoh'))
+
+    class Meta:
+        unique_together = ('data_model', 'index')
 
 

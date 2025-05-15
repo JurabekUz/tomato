@@ -12,7 +12,7 @@ class DataModelAdmin(admin.ModelAdmin):
 
 @admin.register(DataClass)
 class DataClassAdmin(admin.ModelAdmin):
-    list_display = ('data_model', 'title', 'is_active', 'created_time')
+    list_display = ('data_model', 'title', 'index', 'is_active', 'created_time')
     search_fields = ('title',)
     list_filter = ['is_active', 'data_model']
 

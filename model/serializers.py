@@ -1,5 +1,5 @@
-from rest_framework.fields import ImageField
-from rest_framework.serializers import Serializer, CharField
+from rest_framework.fields import ImageField, CharField
+from rest_framework.serializers import Serializer
 
 from .models import DataClass
 

@@ -11,8 +11,8 @@ from PIL import Image
 
 from .models import Predict, PredictImages
 
-# Load your pre-trained model_files once at the start
-model = tf.keras.models.load_model('model/model_files/training_model.h5')
+# Load your pre-trained model_data once at the start
+model = tf.keras.models.load_model('model/model_data/training_model.h5')
 
 
 class ImageClassificationView(APIView):
@@ -54,16 +54,16 @@ class ImageClassificationView(APIView):
     def prepare_image(self, image):
         # Convert image to array and preprocess as needed
         image = Image.open(image)
-        image = image.resize((224, 224))  # Adjust size as per your model_files's requirements
+        image = image.resize((224, 224))  # Adjust size as per your model_data's requirements
         image = tf.keras.preprocessing.image.img_to_array(image)
         image = np.expand_dims(image, axis=0)
-        image /= 255.0  # Normalize if your model_files was trained with normalized images
+        image /= 255.0  # Normalize if your model_data was trained with normalized images
         return image
 
     def _predict_image(self, image):
-        # Predict the class of the image using the loaded model_files
+        # Predict the class of the image using the loaded model_data
         predictions = model.predict(image)
-        class_label = np.argmax(predictions, axis=1)[0]  # Adjust based on your model_files's output
+        class_label = np.argmax(predictions, axis=1)[0]  # Adjust based on your model_data's output
         return class_label
 
 

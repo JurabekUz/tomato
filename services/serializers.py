@@ -1,4 +1,5 @@
-from rest_framework.serializers import ModelSerializer, Serializer, CharField, ImageField, IntegerField
+from rest_framework.fields import CharField, ImageField, IntegerField
+from rest_framework.serializers import ModelSerializer, Serializer
 
 from model.serializers import DataClassSerializer
 from .models import Predict

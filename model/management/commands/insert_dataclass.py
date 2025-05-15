@@ -20,18 +20,17 @@ class Command(BaseCommand):
             'Tomato___healthy'
         ]
         # Assuming you have a DataModel instance to relate to
-        data_model_instance = DataModel.objects.first()  # Get the first DataModel instance or create one
+        data_model_instance = DataModel.objects.filter(is_active=True).first()  # Get the first DataModel instance or create one
 
-        for entry in data_entries:
+        for index, entry in enumerate(data_entries):
             title = entry.replace('___', ' ').replace('_', ' ')
-            label = entry
 
             # Create and save the DataClass instance
             try:
                 data_class, created = DataClass.objects.get_or_create(
                     data_model=data_model_instance,
                     title=title,
-                    label=label,
+                    index=index,
                     defaults={'description': _('Description for {}').format(title)}
                 )
                 if created:
