@@ -4,57 +4,56 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from model.models import DataModel, DataClass
+from utils.pagination import CommonPagination
 from .serializers import PredictListSerializer, PredictRetrieveSerializer
 import tensorflow as tf
+import tensorflow_hub as hub
 import numpy as np
 from PIL import Image
 
 from .models import Predict, PredictImages
 
 # Load your pre-trained model_data once at the start
-model = tf.keras.models.load_model('model/model_data/training_model.h5')
+model = tf.keras.models.load_model(
+    'model_data/model_CNN.h5',
+    # custom_objects={'KerasLayer': hub.KerasLayer}
+)
 
 
-class ImageClassificationView(APIView):
+class CNNPredictView(APIView):
     def post(self, request, *args, **kwargs):
-        data_model = DataModel.objects.filter(is_active=True).first()
-        if not data_model:
-            return Response({'error': 'Data model not found'}, status=status.HTTP_404_NOT_FOUND)
+        data_model = DataModel.objects.get(code='cnn')
 
         images = request.FILES.getlist('image')
-        class_label = self.predict(images, data_model)
+        data_class = self.predict(images, data_model)
 
-        # dbga saqlash
-        try:
-            label_obj = DataClass.objects.get(label=class_label)
-        except DataClass.DoesNotExist:
-            return Response({'error': 'Label not found in DataClass'}, status=status.HTTP_400_BAD_REQUEST)
-
-        predict = Predict.objects.create(user=request.user, result=label_obj)
+        predict = Predict.objects.create(user=request.user, result=data_class)
         image_objs = [PredictImages(predict=predict, image=image) for image in images]
         PredictImages.objects.bulk_create(image_objs)
-        return Response({'class_label': class_label}, status=status.HTTP_200_OK)
-
-
-
-
+        return Response({'class_label': data_class.title}, status=status.HTTP_200_OK)
 
     def predict(self, images, data_model):
+        from collections import Counter
         predictions = []
-        class_labels = DataClass.objects.filter(
-            data_model=data_model, is_active=True
-        ).values_list('label', flat=True)
-
         for image in images:
             nm_image = self.prepare_image(image)
             predictions.append(self._predict_image(nm_image))
-        max_label_index = np.argmax(predictions)
-        return class_labels[max_label_index]
+        most_common = Counter(predictions).most_common(1)[0][0]
+
+        try:
+            data_class = DataClass.objects.filter(
+                data_model=data_model, is_active=True
+            ).get(index=most_common)
+        except DataClass.DoesNotExist:
+            return Response({'error': 'Label not found in DataClass'},
+                            status.HTTP_404_NOT_FOUND)
+
+        return data_class
 
     def prepare_image(self, image):
         # Convert image to array and preprocess as needed
         image = Image.open(image)
-        image = image.resize((224, 224))  # Adjust size as per your model_data's requirements
+        image = image.resize((256, 256))  # Adjust size as per your model_data's requirements
         image = tf.keras.preprocessing.image.img_to_array(image)
         image = np.expand_dims(image, axis=0)
         image /= 255.0  # Normalize if your model_data was trained with normalized images
@@ -70,6 +69,7 @@ class ImageClassificationView(APIView):
 class UserPredictsListView(ListAPIView):
     queryset = Predict.objects.all()
     serializer_class = PredictListSerializer
+    pagination_class = CommonPagination
 
     def get_queryset(self):
         # Filter predicts by the current user

@@ -1,10 +1,13 @@
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 from model.models import DataClass, DataModel
 from django.utils.translation import gettext_lazy as _
 
 
 class Command(BaseCommand):
-    help = 'Insert data into DataClass model'
+    help = 'Insert data into DataClass model for a given DataModel code'
+
+    def add_arguments(self, parser):
+        parser.add_argument('code', type=str, help='DataModel code')
 
     def handle(self, *args, **kwargs):
         data_entries = [
@@ -19,8 +22,13 @@ class Command(BaseCommand):
             'Tomato___Tomato_mosaic_virus',
             'Tomato___healthy'
         ]
+
         # Assuming you have a DataModel instance to relate to
-        data_model_instance = DataModel.objects.filter(is_active=True).first()  # Get the first DataModel instance or create one
+        code = kwargs['code']
+        try:
+            data_model_instance = DataModel.objects.get(code=code, is_active=True)
+        except DataModel.DoesNotExist:
+            raise CommandError(f'DataModel with code "{code}" does not exist or is not active.')
 
         for index, entry in enumerate(data_entries):
             title = entry.replace('___', ' ').replace('_', ' ')

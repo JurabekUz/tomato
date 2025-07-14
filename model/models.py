@@ -7,6 +7,7 @@ from base.models import BaseModel
 class DataModel(BaseModel):
     title = models.CharField(max_length=250, verbose_name=_('Nomi'))
     description = models.TextField(blank=True, null=True, verbose_name=_('Tavsif/Izoh'))
+    code = models.CharField(max_length=10)
 
     def __str__(self):
         return self.title

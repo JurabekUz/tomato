@@ -5,7 +5,7 @@ from .models import DataModel, DataClass
 
 @admin.register(DataModel)
 class DataModelAdmin(admin.ModelAdmin):
-    list_display = ('title', 'is_active', 'created_time')
+    list_display = ('title', 'code', 'is_active', 'created_time')
     list_filter = ('is_active',)
     search_fields = ('title',)
 

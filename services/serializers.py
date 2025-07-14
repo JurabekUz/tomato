@@ -12,7 +12,7 @@ class ImageSerializer(Serializer):
 
 class PredictListSerializer(ModelSerializer):
     result = CharField(read_only=True, source='predict.title')
-    images_count = IntegerField(read_only=True, source='images_count')
+    images_count = IntegerField(read_only=True)
 
 
     class Meta:
