@@ -8,7 +8,8 @@ from rest_framework_simplejwt.views import (
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 from config.settings import SHOW_SWAGGER
-
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('admin', admin.site.urls),
     path('api/auth/token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -16,6 +17,7 @@ urlpatterns = [
     path('api/', include('users.urls')),
     path('api/', include('services.urls')),
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 if SHOW_SWAGGER:

@@ -11,13 +11,14 @@ class ImageSerializer(Serializer):
 
 
 class PredictListSerializer(ModelSerializer):
-    result = CharField(read_only=True, source='predict.title')
+    type_title = CharField(read_only=True, source='result.data_model.title')
+    result_title = CharField(read_only=True, source='result.title')
     images_count = IntegerField(read_only=True)
 
 
     class Meta:
         model = Predict
-        fields = ['id', 'result', 'images_count', 'created_time']
+        fields = ['id', 'result_title', 'type_title', 'images_count', 'created_time']
 
 
 class PredictRetrieveSerializer(ModelSerializer):

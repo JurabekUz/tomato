@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from model.models import DataModel, DataClass
+from utils.exceptions import CommonException
 from utils.pagination import CommonPagination
 from .serializers import PredictListSerializer, PredictRetrieveSerializer
 import tensorflow as tf
@@ -25,6 +26,7 @@ class CNNPredictView(APIView):
         data_model = DataModel.objects.get(code='cnn')
 
         images = request.FILES.getlist('image')
+        print(len(images))
         data_class = self.predict(images, data_model)
 
         predict = Predict.objects.create(user=request.user, result=data_class)
@@ -37,16 +39,27 @@ class CNNPredictView(APIView):
         predictions = []
         for image in images:
             nm_image = self.prepare_image(image)
-            predictions.append(self._predict_image(nm_image))
-        most_common = Counter(predictions).most_common(1)[0][0]
+            try:
+                predictions.append(self._predict_image(nm_image))
+            except:
+                raise CommonException(
+                    "Rasm bilan ishlashda xatolik, iltimos yaxshiroq formatdagi rasm yuboring")
+
+        print(predictions)
+        try:
+            most_common = Counter(predictions).most_common(1)[0][0]
+        except IndexError:
+            # data = {"detail" : "Rasm kasalligi topilmadi, Uzr so'raymiz", 'code': 1122}
+            raise CommonException("Rasm kasalligi topilmadi, Uzr so'raymiz")
+        except:
+            raise CommonException("Nazarda tutilmagan xatolik yuz berdi.")
 
         try:
             data_class = DataClass.objects.filter(
                 data_model=data_model, is_active=True
             ).get(index=most_common)
         except DataClass.DoesNotExist:
-            return Response({'error': 'Label not found in DataClass'},
-                            status.HTTP_404_NOT_FOUND)
+            raise CommonException("Label not found in DataClass")
 
         return data_class
 
@@ -73,7 +86,7 @@ class UserPredictsListView(ListAPIView):
 
     def get_queryset(self):
         # Filter predicts by the current user
-        return Predict.objects.filter(user=self.request.user).select_related('result')
+        return Predict.objects.filter(user=self.request.user).select_related('result__data_model')
 
 
 class UserPredictsRetrieveView(RetrieveAPIView):
@@ -82,6 +95,8 @@ class UserPredictsRetrieveView(RetrieveAPIView):
 
     def get_queryset(self):
         # Filter predicts by the current user
-        return Predict.objects.filter(user=self.request.user).select_related('result').prefetch_related('images')
+        return Predict.objects.filter(
+            user=self.request.user
+        ).select_related('result__data_model').prefetch_related('images')
 
 

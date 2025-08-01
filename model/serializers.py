@@ -9,5 +9,6 @@ class ImageUploadSerializer(Serializer):
 
 
 class DataClassSerializer(Serializer):
+    type_title = CharField(read_only=True, source='data_model.title')
     title = CharField(read_only=True)
     description = CharField(read_only=True)
