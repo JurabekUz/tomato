@@ -1,9 +1,10 @@
 from django.urls import path
 
-from services.views import CNNPredictView, UserPredictsListView, UserPredictsRetrieveView
+from services.views import PredictView, UserPredictsListView, UserPredictsRetrieveView, DataModelSelectView
 
 urlpatterns = [
+    path('models/select', DataModelSelectView.as_view(), name='predicts'),
     path('predicts', UserPredictsListView.as_view(), name='predicts'),
     path('predicts/<int:pk>', UserPredictsRetrieveView.as_view(), name='predicts_detail'),
-    path('predicts/cnn', CNNPredictView.as_view(), name='cnn'),
+    path('predict', PredictView.as_view()),
 ]

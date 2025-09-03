@@ -7,10 +7,15 @@ from base.models import BaseModel
 class DataModel(BaseModel):
     title = models.CharField(max_length=250, verbose_name=_('Nomi'))
     description = models.TextField(blank=True, null=True, verbose_name=_('Tavsif/Izoh'))
-    code = models.CharField(max_length=10)
+    code = models.CharField(max_length=10, unique=True)
+    file = models.FileField(upload_to='models/')
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name_plural = _("Modellar")
+        verbose_name = _("Model")
 
 
 class DataClass(BaseModel):
@@ -21,5 +26,7 @@ class DataClass(BaseModel):
 
     class Meta:
         unique_together = ('data_model', 'index')
+        verbose_name = _("Model klassi")
+        verbose_name_plural = _("Model klasslari")
 
 

@@ -1,13 +1,20 @@
-from rest_framework.fields import CharField, ImageField, IntegerField
-from rest_framework.serializers import ModelSerializer, Serializer
+from rest_framework.fields import CharField, ImageField, IntegerField, ListField
+from rest_framework.serializers import ModelSerializer, Serializer, PrimaryKeyRelatedField
 
+from model.models import DataModel
 from model.serializers import DataClassSerializer
 from .models import Predict
+
 
 
 class ImageSerializer(Serializer):
     id = IntegerField(read_only=True)
     image = ImageField()
+
+
+class PredictSerializer(Serializer):
+    images = ListField(child=ImageField())
+    data_model = PrimaryKeyRelatedField(queryset=DataModel.objects.filter(is_active=True))
 
 
 class PredictListSerializer(ModelSerializer):
@@ -28,3 +35,11 @@ class PredictRetrieveSerializer(ModelSerializer):
     class Meta:
         model = Predict
         fields = ['id', 'result', 'created_time', 'images']
+
+
+class PredictResponseSerializer(Serializer):
+    class_label = CharField(
+        label="Tasniflash natijasi",
+        help_text="Tahmin qilingan rasmning sinf nomi."
+    )
+

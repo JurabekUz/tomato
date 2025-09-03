@@ -1,0 +1,169 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-03 10:43+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: .\base\models.py:6 .\base\models.py:21
+msgid "Faol"
+msgstr "Активный"
+
+#: .\base\models.py:7
+msgid "Yaratilgan vaqti"
+msgstr "Время создания"
+
+#: .\base\models.py:8
+msgid "Oxirgi yangilangan vaqti"
+msgstr "Время последнего обновления"
+
+#: .\base\models.py:15 .\model\models.py:8 .\model\models.py:23
+msgid "Nomi"
+msgstr "Название"
+
+#: .\base\models.py:23
+msgid "No faol"
+msgstr "Неактивный"
+
+#: .\base\models.py:36
+msgid "Pomidor turi"
+msgstr "Тип томата"
+
+#: .\base\models.py:37
+msgid "Pomidor Turlari"
+msgstr "Типы томатов"
+
+#: .\base\models.py:46
+msgid "Kasallik turi"
+msgstr "Тип заболевания"
+
+#: .\base\models.py:47
+msgid "Kasallik Turlari"
+msgstr "Типы заболеваний"
+
+#: .\base\models.py:59
+msgid "Kasallik darajasi"
+msgstr "Степень заболевания"
+
+#: .\base\models.py:60
+msgid "Kasallik Darajalari"
+msgstr "Степени заболеваний"
+
+#: .\base\models.py:73
+msgid "Rasm"
+msgstr "Изображение"
+
+#: .\base\models.py:74
+msgid "Rasmlar"
+msgstr "Изображения"
+
+#: .\config\settings.py:133
+msgid "O'zbekcha"
+msgstr "Узбекский"
+
+#: .\config\settings.py:134
+msgid "Ruscha"
+msgstr "Русский"
+
+#: .\config\settings.py:135
+msgid "Ingilizcha"
+msgstr "Английский"
+
+#: .\model\management\commands\insert_dataclass.py:37
+msgid "Description for {}"
+msgstr "Описание для {}"
+
+#: .\model\models.py:9 .\model\models.py:25
+msgid "Tavsif/Izoh"
+msgstr "Описание/Комментарий"
+
+#: .\model\models.py:17
+msgid "Modellar"
+msgstr "Модель"
+
+#: .\model\models.py:18 .\model\models.py:22
+msgid "Model"
+msgstr "Модель"
+
+#: .\model\models.py:24
+msgid "Index"
+msgstr "Индекс"
+
+#: .\model\models.py:29
+msgid "Model klassi"
+msgstr "Модельный класс"
+
+#: .\model\models.py:30
+msgid "Model klasslari"
+msgstr "Модельный класс"
+
+#: .\services\views.py:56
+#, python-brace-format
+msgid "Modelni yuklashda xatolik yuz berdi: {e}"
+msgstr "Произошла ошибка при загрузке модели: {e}"
+
+#: .\services\views.py:66
+msgid ""
+"Rasm bilan ishlashda xatolik, iltimos yaxshiroq formatdagi rasm yuboring"
+msgstr ""
+"Ошибка при работе с изображением, пожалуйста, отправьте изображение в лучшем "
+"формате"
+
+#: .\services\views.py:72
+msgid "Rasm kasalligi topilmadi, Uzr so'raymiz"
+msgstr "Болезнь на изображении не найдена, извините"
+
+#: .\services\views.py:74
+msgid "Nazarda tutilmagan xatolik yuz berdi."
+msgstr "Произошла непредвиденная ошибка."
+
+#: .\services\views.py:81
+msgid "Label not found in DataClass"
+msgstr "Метка не найдена в DataClass"
+
+#: .\users\admin.py:17 .\users\admin.py:37
+msgid "Personal info"
+msgstr "Личная информация"
+
+#: .\users\admin.py:19
+msgid "Permissions"
+msgstr "Разрешения"
+
+#: .\users\models.py:14
+msgid "Phone number must be entered in the format: '998XXXXXXXX'."
+msgstr "Номер телефона должен быть введен в формате: '998XXXXXXXX'."
+
+#: .\users\models.py:24
+msgid "A user with that phone number already exists."
+msgstr "Пользователь с таким номером телефона уже существует."
+
+#: .\users\models.py:28
+msgid "father name"
+msgstr "Отчество"
+
+#: .\users\models.py:33
+msgid "language"
+msgstr "Язык"
+
+#: .\users\models.py:46
+msgid "user"
+msgstr "пользователь"
+
+#: .\users\models.py:47
+msgid "users"
+msgstr "пользователи"
+

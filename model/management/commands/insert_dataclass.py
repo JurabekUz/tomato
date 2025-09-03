@@ -11,16 +11,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         data_entries = [
-            'Tomato___Bacterial_spot',
-            'Tomato___Early_blight',
-            'Tomato___Late_blight',
-            'Tomato___Leaf_Mold',
-            'Tomato___Septoria_leaf_spot',
-            'Tomato___Spider_mites Two-spotted_spider_mite',
-            'Tomato___Target_Spot',
-            'Tomato___Tomato_Yellow_Leaf_Curl_Virus',
-            'Tomato___Tomato_mosaic_virus',
-            'Tomato___healthy'
+            'Healthy',
+            'Phytophthora1',
+            'Phytophthora2',
+            'Phytophthora3',
+            'Phytophthora4'
         ]
 
         # Assuming you have a DataModel instance to relate to

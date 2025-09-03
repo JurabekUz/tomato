@@ -1,3 +1,3 @@
 from django.shortcuts import render
 
-# Create your voldiews here.
+# Create your views here.
