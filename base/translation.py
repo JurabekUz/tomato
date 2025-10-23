@@ -1,7 +1,7 @@
 from modeltranslation.translator import register, TranslationOptions
-from .models import DiseaseType, DiseaseLevel, TomatoType
+from .models import DiseaseType, DiseaseLevel, PlantType
 
-models_list = [DiseaseLevel, DiseaseType, TomatoType]
+models_list = [DiseaseLevel, DiseaseType, PlantType]
 
 
 @register(models_list)

@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django.contrib.admin import display
 
-from .models import TomatoType, DiseaseLevel, DiseaseType, ImageData
+from .models import PlantType, DiseaseLevel, DiseaseType, ImageData
 
 
-@admin.register(TomatoType)
+@admin.register(PlantType)
 class TomatoTypeAdmin(admin.ModelAdmin):
     list_display = ['title', 'is_active']
     readonly_fields = ['created_time', 'updated_time']
@@ -14,10 +14,10 @@ class TomatoTypeAdmin(admin.ModelAdmin):
 
 @admin.register(DiseaseType)
 class DiseaseTypeAdmin(admin.ModelAdmin):
-    list_display = ['title', 'tomato', 'is_active']
+    list_display = ['title', 'plant', 'is_active']
     readonly_fields = ['created_time', 'updated_time']
-    search_fields = ['title', 'tomato__title']
-    list_filter = ['is_active', 'tomato']
+    search_fields = ['title', 'plant__title']
+    list_filter = ['is_active', 'plant']
 
     # @display
     # def tomato(self, obj):
@@ -28,7 +28,7 @@ class DiseaseTypeAdmin(admin.ModelAdmin):
 class DiseaseLevelAdmin(admin.ModelAdmin):
     list_display = ['title', 'type', 'is_active']
     readonly_fields = ['created_time', 'updated_time']
-    search_fields = ['title', 'type__tomato__title', 'type__title']
+    search_fields = ['title', 'type__plant__title', 'type__title']
     search_help_text = 'Kasallik darajasi, pomidor turi, kasallik nomlari orqali izlang'
     list_filter = ['type', 'is_active']
 
