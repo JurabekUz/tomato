@@ -30,15 +30,15 @@ def image_data_path(instance, filename):
     return path
 
 
-class TomatoType(BaseTitleModel):
+class PlantType(BaseTitleModel):
     class Meta:
         ordering = ['-created_time']
-        verbose_name = _('Pomidor turi')
-        verbose_name_plural = _('Pomidor Turlari')
+        verbose_name = _("O'zimlik turi")
+        verbose_name_plural = _("O'simlik Turlari")
 
 
 class DiseaseType(BaseTitleModel):
-    tomato = models.ForeignKey(TomatoType, models.CASCADE, 'disease_types')
+    plant = models.ForeignKey(PlantType, models.CASCADE, 'disease_types')
 
     class Meta:
         db_table = 'disease_types'
@@ -47,7 +47,7 @@ class DiseaseType(BaseTitleModel):
         verbose_name_plural = _('Kasallik Turlari')
 
     def __str__(self):
-        return f"{self.title} {self.tomato.title}"
+        return f"{self.title} {self.plant.title}"
 
 
 class DiseaseLevel(BaseTitleModel):
@@ -60,7 +60,7 @@ class DiseaseLevel(BaseTitleModel):
         verbose_name_plural = _('Kasallik Darajalari')
 
     def __str__(self):
-        return f"{self.title} {self.type.title} {self.type.tomato.title}"
+        return f"{self.title} {self.type.title} {self.type.plant.title}"
 
 
 class ImageData(BaseModel):
