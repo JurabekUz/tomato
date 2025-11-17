@@ -13,6 +13,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('i18n/', include('django.conf.urls.i18n')),
+    path('admin/', admin.site.urls),
+
     path('api/auth/token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/auth/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/', include('users.urls')),
@@ -28,11 +31,3 @@ if SHOW_SWAGGER:
         path('api/swagger', SpectacularSwaggerView.as_view(), name='swagger'),
         path('api/redoc', SpectacularRedocView.as_view(), name='redoc'),
     ]
-
-urlpatterns += [
-    path('i18n/', include('django.conf.urls.i18n'))
-]
-
-urlpatterns += i18n_patterns(
-    path('admin/', admin.site.urls),
-)

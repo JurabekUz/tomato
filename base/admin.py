@@ -3,16 +3,28 @@ from django.contrib import admin
 from .models import PlantType, DiseaseLevel, DiseaseType, ImageData
 
 
+class DiseaseTypeInline(admin.TabularInline):
+    model = DiseaseType
+    extra = 0
+
+
 @admin.register(PlantType)
-class TomatoTypeAdmin(admin.ModelAdmin):
+class PlantTypeAdmin(admin.ModelAdmin):
+    inlines = [DiseaseTypeInline]
     list_display = ['title', 'is_active']
     readonly_fields = ['created_time', 'updated_time']
     search_fields = ['title',]
     list_filter = ['is_active',]
 
 
+class DiseaseLevelInline(admin.TabularInline):
+    model = DiseaseLevel
+    extra = 0
+
+
 @admin.register(DiseaseType)
 class DiseaseTypeAdmin(admin.ModelAdmin):
+    inlines = [DiseaseLevelInline]
     list_display = ['title', 'plant', 'is_active']
     readonly_fields = ['created_time', 'updated_time']
     search_fields = ['title', 'plant__title']

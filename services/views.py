@@ -1,12 +1,13 @@
 import cv2
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.utils.translation import gettext_lazy as _
 
-from model.models import DataClass, DataModel
+from model.models import DataModel
+from base.models import DiseaseType, DiseaseLevel
 from utils.exceptions import CommonException
 from utils.pagination import CommonPagination
 from .serializers import PredictListSerializer, PredictRetrieveSerializer, PredictSerializer, PredictResponseSerializer
@@ -17,8 +18,22 @@ from .models import Predict, PredictImages
 
 
 class DataModelSelectView(APIView):
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(name='disease_type', required=False, type=int)
+        ]
+    )
     def get(self, request):
-        queryset = DataModel.objects.filter(is_active=True).values('id', 'title')
+        disease_type = request.get('disease_type')
+        if disease_type and disease_type.isdigit():
+            queryset = DataModel.objects.filter(
+                is_active=True, disease_type=int(disease_type)
+            ).values('id', 'title')
+        else:
+            queryset = DataModel.objects.filter(
+                is_active=True
+            ).values('id', 'title')
         return Response(data=queryset)
 
 
@@ -65,7 +80,7 @@ class PredictView(APIView):
 
         data_class = self.predict(images, data_model)
 
-        predict = Predict.objects.create(user=request.user, result=data_class)
+        predict = Predict.objects.create(user=request.user, result=data_class, data_model=data_model)
         image_objs = [PredictImages(predict=predict, image=image) for image in images]
         PredictImages.objects.bulk_create(image_objs)
         return Response({'class_label': data_class.title}, status=status.HTTP_200_OK)
@@ -102,11 +117,9 @@ class PredictView(APIView):
             raise CommonException(_("Nazarda tutilmagan xatolik yuz berdi."))
 
         try:
-            data_class = DataClass.objects.filter(
-                data_model=data_model, is_active=True
-            ).get(index=most_common)
-        except DataClass.DoesNotExist:
-            raise CommonException(_("Label not found in DataClass"))
+            data_class = data_model.disease_type.disease_levels.get(index=most_common)
+        except DiseaseLevel.DoesNotExist:
+            raise CommonException(_("Label not found in Disease Level"))
 
         return data_class
 
@@ -187,7 +200,7 @@ class UserPredictsListView(ListAPIView):
 
     def get_queryset(self):
         # Filter predicts by the current user
-        return Predict.objects.filter(user=self.request.user).select_related('result__data_model')
+        return Predict.objects.filter(user=self.request.user).select_related('result__type', 'data_model')
 
 
 class UserPredictsRetrieveView(RetrieveAPIView):
@@ -198,6 +211,6 @@ class UserPredictsRetrieveView(RetrieveAPIView):
         # Filter predicts by the current user
         return Predict.objects.filter(
             user=self.request.user
-        ).select_related('result__data_model').prefetch_related('images')
+        ).select_related('result__type', 'data_model').prefetch_related('images')
 
 

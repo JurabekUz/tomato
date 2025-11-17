@@ -31,6 +31,8 @@ def image_data_path(instance, filename):
 
 
 class PlantType(BaseTitleModel):
+    description = models.TextField(verbose_name=_('Tavsif/Izoh'))
+
     class Meta:
         ordering = ['-created_time']
         verbose_name = _("O'zimlik turi")
@@ -39,6 +41,7 @@ class PlantType(BaseTitleModel):
 
 class DiseaseType(BaseTitleModel):
     plant = models.ForeignKey(PlantType, models.CASCADE, 'disease_types')
+    description = models.TextField(verbose_name=_('Tavsif/Izoh'))
 
     class Meta:
         db_table = 'disease_types'
@@ -52,6 +55,8 @@ class DiseaseType(BaseTitleModel):
 
 class DiseaseLevel(BaseTitleModel):
     type = models.ForeignKey(DiseaseType, models.CASCADE, 'disease_levels')
+    description = models.TextField(verbose_name=_('Tavsif/Izoh'))
+    index = models.PositiveIntegerField(verbose_name=_('Index'))
 
     class Meta:
         db_table = 'disease_levels'

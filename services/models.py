@@ -1,14 +1,16 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from model.models import DataClass
+from base.models import DiseaseLevel
+from model.models import DataModel
 
 User = get_user_model()
 
 
 class Predict(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='predicts')
-    result = models.ForeignKey(DataClass, on_delete=models.SET_NULL, null=True, related_name='predicts')
+    data_model = models.ForeignKey(DataModel, on_delete=models.SET_NULL, null=True, blank=True, related_name='predicts')
+    result = models.ForeignKey(DiseaseLevel, on_delete=models.SET_NULL, null=True, blank=True, related_name='predicts')
     created_time = models.DateTimeField(auto_now_add=True)
     percentage = models.PositiveIntegerField(default=0)
 

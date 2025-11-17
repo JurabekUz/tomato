@@ -1,19 +1,25 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from base.models import BaseModel
+from base.models import BaseModel, DiseaseType, DiseaseLevel
 
 
 class DataModel(BaseModel):
     title = models.CharField(max_length=250, verbose_name=_('Nomi'))
-    description = models.TextField(blank=True, null=True, verbose_name=_('Tavsif/Izoh'))
-    code = models.CharField(max_length=10, unique=True)
+    disease_type = models.ForeignKey(
+        DiseaseType, on_delete=models.PROTECT,
+        related_name='data_models',
+        verbose_name=_("Kasallik turi")
+    )
+    description = models.TextField(verbose_name=_('Tavsif/Izoh'))
+    code = models.CharField(max_length=10)
     file = models.FileField(upload_to='models/')
 
     def __str__(self):
         return self.title
 
     class Meta:
+        unique_together = ('disease_type', 'code')
         verbose_name_plural = _("Modellar")
         verbose_name = _("Model")
 

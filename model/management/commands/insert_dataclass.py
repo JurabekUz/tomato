@@ -11,11 +11,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         data_entries = [
-            'Healthy',
-            'Phytophthora1',
-            'Phytophthora2',
-            'Phytophthora3',
-            'Phytophthora4'
+            "Sog'lom",
+            '1-daraja',
+            '2-daraja',
+            '3-daraja',
+            '4-daraja'
         ]
 
         # Assuming you have a DataModel instance to relate to
