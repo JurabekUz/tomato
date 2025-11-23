@@ -1,0 +1,23 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+  <h2>ZIP orqali rasm yuklash</h2>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label>Kasallik darajasi:</label>
+    <select name="level">
+      {% for lvl in levels %}
+        <option value="{{ lvl.id }}">{{ lvl }}</option>
+      {% endfor %}
+    </select>
+
+    <br><br>
+
+    {{ form.zip_file }}
+
+    <br><br>
+
+    <button type="submit" class="default">Yuklash</button>
+  </form>
+{% endblock %}

@@ -6,7 +6,7 @@ from .models import PlantType, DiseaseType
 
 
 class PlantTypeSelectView(APIView):
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         queryset = PlantType.objects.filter(is_active=True).values('id', 'title')
         return Response(data=list(queryset))
 
@@ -18,7 +18,7 @@ class DiseaseTypeSelectView(APIView):
             OpenApiParameter(name='plant_type', required=True, type=int)
         ]
     )
-    def get(self, request):
-        plant_type = int(request.get('plant_type'))
+    def get(self, request, *args, **kwargs):
+        plant_type = int(request.query_params.get('plant_type'))
         queryset = DiseaseType.objects.filter(is_active=True, plant_id=plant_type).values('id', 'title')
         return Response(data=list(queryset))

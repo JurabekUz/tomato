@@ -24,8 +24,8 @@ class DataModelSelectView(APIView):
             OpenApiParameter(name='disease_type', required=False, type=int)
         ]
     )
-    def get(self, request):
-        disease_type = request.get('disease_type')
+    def get(self, request, *args, **kwargs):
+        disease_type = request.query_params.get('disease_type')
         if disease_type and disease_type.isdigit():
             queryset = DataModel.objects.filter(
                 is_active=True, disease_type=int(disease_type)
