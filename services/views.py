@@ -90,6 +90,7 @@ class PredictView(APIView):
         try:
             # Modelni dinamik ravishda DataModel.file manzilidan yuklash
             model_file_path = data_model.file.path
+            print(model_file_path)
             model = tf.keras.models.load_model(model_file_path)
         except (IOError, ValueError) as e:
             raise CommonException(_(f"Modelni yuklashda xatolik yuz berdi: {e}"))
