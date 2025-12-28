@@ -11,7 +11,6 @@ from base.models import DiseaseType, DiseaseLevel
 from utils.exceptions import CommonException
 from utils.pagination import CommonPagination
 from .serializers import PredictListSerializer, PredictRetrieveSerializer, PredictSerializer, PredictResponseSerializer
-import tensorflow as tf
 import numpy as np
 
 from .models import Predict, PredictImages
@@ -86,6 +85,7 @@ class PredictView(APIView):
         return Response({'class_label': data_class.title}, status=status.HTTP_200_OK)
 
     def predict(self, images, data_model):
+        import tensorflow as tf
         from collections import Counter
         try:
             # Modelni dinamik ravishda DataModel.file manzilidan yuklash
