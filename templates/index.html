@@ -1,0 +1,635 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlantDetect - AI-Powered Plant Disease Detection</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fplantdetec8814back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.12"></script>
+  <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.2"></script>
+  </head>
+<body class="bg-white selection:bg-emerald-600 selection:text-white">
+
+    <!-- Main Container -->
+    <main class="min-h-screen py-8 px-4 md:px-8 lg:px-12">
+        <div class="max-w-6xl mx-auto">
+
+            <!-- Header Section -->
+            <header class="text-center mb-12 animate-fade-up">
+                <h1 class="text-4xl md:text-5xl font-semibold text-zinc-900 tracking-tight mb-3">
+                    Plant Disease Detection
+                </h1>
+                <p class="text-base text-zinc-600 font-normal max-w-2xl mx-auto leading-relaxed">
+                    AI-powered analysis to identify plant diseases from leaf images.
+                    Upload images and get instant predictions with confidence scores.
+                </p>
+            </header>
+
+            <!-- Divider -->
+            <div class="w-full h-px bg-gradient-to-r from-transparent via-zinc-200 to-transparent mb-12"></div>
+
+            <!-- Input Form Section -->
+            <section class="mb-16 animate-fade-up delay-100">
+                <div class="bg-white border border-zinc-200 rounded-xl shadow-lg shadow-zinc-900/5 p-6 md:p-8">
+
+                    <!-- Form Title -->
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-semibold text-zinc-900 tracking-tight mb-2">
+                            Configure Detection
+                        </h2>
+                        <p class="text-sm text-zinc-500">
+                            Select plant type, disease category, and AI model, then upload leaf images
+                        </p>
+                    </div>
+
+                    <!-- Dropdowns Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+                        <!-- Plant Type Dropdown -->
+                        <div class="flex flex-col gap-2">
+                            <label for="plantType" class="text-sm font-medium text-zinc-700">
+                                Plant Type
+                            </label>
+                            <div class="relative">
+                                <select
+                                    id="plantType"
+                                    class="w-full bg-white border border-zinc-200 rounded-lg px-4 py-3 text-sm text-zinc-900 appearance-none cursor-pointer hover:border-zinc-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                                >
+                                    {% for plant in plants %}
+                                        <option value="{{ plant.id }}">{{ plant.title }}</option>
+                                    {% endfor %}
+
+                                </select>
+                                <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m6 9 6 6 6-6"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Disease Type Dropdown -->
+                        <div class="flex flex-col gap-2">
+                            <label for="diseaseType" class="text-sm font-medium text-zinc-700">
+                                Disease Type
+                            </label>
+                            <div class="relative">
+                                <select
+                                    id="diseaseType"
+                                    disabled
+                                    class="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3 text-sm text-zinc-400 appearance-none cursor-not-allowed transition-all"
+                                >
+                                    <option value="">Select disease type</option>
+                                </select>
+                                <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m6 9 6 6 6-6"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AI Model Dropdown -->
+                        <div class="flex flex-col gap-2">
+                            <label for="aiModel" class="text-sm font-medium text-zinc-700">
+                                AI Model
+                            </label>
+                            <div class="relative">
+                                <select
+                                    id="aiModel"
+                                    disabled
+                                    class="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3 text-sm text-zinc-400 appearance-none cursor-not-allowed transition-all"
+                                >
+                                    <option value="">Select AI model</option>
+                                </select>
+                                <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m6 9 6 6 6-6"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Image Upload Section -->
+                    <div class="mb-8">
+                        <label class="text-sm font-medium text-zinc-700 mb-3 block">
+                            Upload Leaf Images
+                        </label>
+
+                        <!-- Drag & Drop Area -->
+                        <div
+                            id="dropArea"
+                            class="border-2 border-dashed border-zinc-300 rounded-xl p-8 text-center hover:border-emerald-500 hover:bg-emerald-50/30 transition-all cursor-pointer group"
+                        >
+                            <input
+                                type="file"
+                                id="fileInput"
+                                multiple
+                                accept="image/*"
+                                class="hidden"
+                            >
+                            <div class="flex flex-col items-center gap-3">
+                                <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 group-hover:bg-emerald-200 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="17 8 12 3 7 8"/>
+                                        <line x1="12" x2="12" y1="3" y2="15"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-zinc-700 mb-1">
+                                        Click to upload or drag and drop
+                                    </p>
+                                    <p class="text-xs text-zinc-500">
+                                        PNG, JPG up to 10MB (Multiple files supported)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Image Preview Grid -->
+                        <div id="imagePreviewGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-6 hidden">
+                            <!-- Preview items will be inserted here -->
+                        </div>
+                    </div>
+
+                    <!-- Predict Button -->
+                    <button
+                        id="predictBtn"
+                        disabled
+                        class="w-full bg-zinc-300 text-white font-medium py-4 px-6 rounded-lg cursor-not-allowed transition-all"
+                    >
+                        <span class="flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                                <path d="M3 3v5h5"/>
+                                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+                                <path d="M16 16h5v5"/>
+                            </svg>
+                            Predict Disease Level
+                        </span>
+                    </button>
+
+                </div>
+            </section>
+
+            <!-- Divider -->
+            <div class="w-full h-px bg-gradient-to-r from-transparent via-zinc-200 to-transparent mb-12"></div>
+
+            <!-- Results Section (Hidden by default) -->
+            <section id="resultsSection" class="mb-16 animate-fade-up delay-200 hidden">
+                <div class="bg-gradient-to-br from-emerald-50 to-white border border-emerald-200 rounded-xl shadow-lg shadow-emerald-900/5 p-6 md:p-8">
+
+                    <!-- Results Header -->
+                    <div class="text-center mb-10">
+                        <div class="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider mb-4">
+                            <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                            Analysis Complete
+                        </div>
+                        <h2 class="text-3xl md:text-4xl font-semibold text-zinc-900 tracking-tight mb-3">
+                            Detection Results
+                        </h2>
+                        <p class="text-sm text-zinc-600">
+                            Based on uploaded leaf images and selected AI model
+                        </p>
+                    </div>
+
+                    <!-- Prediction Display -->
+                    <div class="bg-white border border-zinc-200 rounded-xl p-8 mb-8 text-center">
+                        <div class="mb-6">
+                            <p class="text-sm font-medium text-zinc-500 uppercase tracking-wider mb-2">
+                                Detected Disease
+                            </p>
+                            <h3 id="diseaseLabel" class="text-3xl md:text-4xl font-bold text-emerald-600 mb-4">
+                                Early Blight
+                            </h3>
+                        </div>
+
+                        <div class="flex items-center justify-center gap-8 flex-wrap">
+                            <!-- Confidence Score -->
+                            <div class="flex flex-col items-center">
+                                <div class="relative w-32 h-32 mb-3">
+                                    <svg class="w-32 h-32 transform -rotate-90">
+                                        <circle cx="64" cy="64" r="56" stroke="#e4e4e7" stroke-width="8" fill="none"/>
+                                        <circle
+                                            id="confidenceCircle"
+                                            cx="64" cy="64" r="56"
+                                            stroke="#10b981"
+                                            stroke-width="8"
+                                            fill="none"
+                                            stroke-dasharray="351.86"
+                                            stroke-dashoffset="35.186"
+                                            stroke-linecap="round"
+                                            class="transition-all duration-1000"
+                                        />
+                                    </svg>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span id="confidenceValue" class="text-3xl font-bold text-zinc-900">92%</span>
+                                    </div>
+                                </div>
+                                <p class="text-sm font-medium text-zinc-600">Confidence Score</p>
+                            </div>
+
+                            <!-- Additional Metrics -->
+                            <div class="grid grid-cols-2 gap-6">
+                                <div class="text-center">
+                                    <p class="text-2xl font-bold text-zinc-900 mb-1">Tomato</p>
+                                    <p class="text-xs text-zinc-500 uppercase tracking-wider">Plant Type</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-2xl font-bold text-zinc-900 mb-1">ResNet-50</p>
+                                    <p class="text-xs text-zinc-500 uppercase tracking-wider">AI Model</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reference Images Grid -->
+                    <div>
+                        <h4 class="text-lg font-semibold text-zinc-900 mb-4 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600">
+                                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                                <circle cx="9" cy="9" r="2"/>
+                                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                            </svg>
+                            Reference Images
+                        </h4>
+
+                        <div id="referenceGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Reference Image 1 -->
+                            <div class="bg-white border border-zinc-200 rounded-lg overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                                <div class="aspect-square bg-zinc-100 overflow-hidden">
+                                    <img
+                                        src="{% static 'model-images/cnn-acc.png' %}"
+                                        alt="Tomato leaf showing early stage of early blight disease with small circular lesions"
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    >
+                                </div>
+                                <div class="p-4">
+                                    <p class="text-sm text-zinc-700 leading-relaxed">
+                                        Early stage symptoms showing small dark spots with concentric rings on lower leaves
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Reference Image 2 -->
+                            <div class="bg-white border border-zinc-200 rounded-lg overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                                <div class="aspect-square bg-zinc-100 overflow-hidden">
+                                    <img
+                                        src="{% static 'model-images/cnn-loss.png' %}"
+                                        alt="Tomato plant with advanced early blight infection showing yellowing and browning leaves"
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    >
+                                </div>
+                                <div class="p-4">
+                                    <p class="text-sm text-zinc-700 leading-relaxed">
+                                        Advanced infection with yellowing leaves and enlarged lesions spreading upward
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Reference Image 3 -->
+                            <div class="bg-white border border-zinc-200 rounded-lg overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                                <div class="aspect-square bg-zinc-100 overflow-hidden">
+                                    <img
+                                        src="{% static 'model-images/cnn-main.png' %}"
+                                        alt="Healthy tomato plant leaves for comparison showing no disease symptoms"
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    >
+                                </div>
+                                <div class="p-4">
+                                    <p class="text-sm text-zinc-700 leading-relaxed">
+                                        Healthy leaf comparison - uniform green color with no spots or discoloration
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="text-center py-8 border-t border-zinc-200">
+                <p class="text-xs text-zinc-500">
+                    © 2026 PlantDetect. AI-Powered Plant Disease Detection System.
+                    <span class="text-zinc-400">Last updated: January 13, 2026</span>
+                </p>
+            </footer>
+
+        </div>
+    </main>
+
+    <script>
+
+        // DOM elements
+        const plantTypeSelect = document.getElementById('plantType');
+        const diseaseTypeSelect = document.getElementById('diseaseType');
+        const aiModelSelect = document.getElementById('aiModel');
+        const dropArea = document.getElementById('dropArea');
+        const fileInput = document.getElementById('fileInput');
+        const imagePreviewGrid = document.getElementById('imagePreviewGrid');
+        const predictBtn = document.getElementById('predictBtn');
+        const resultsSection = document.getElementById('resultsSection');
+
+        let uploadedFiles = [];
+
+        // Dependent dropdown logic
+        diseaseTypeSelect.disabled = false;
+        aiModelSelect.disabled = false;
+
+        aiModelSelect.addEventListener('change', checkPredictButton);
+
+        // File upload handling
+        dropArea.addEventListener('click', () => fileInput.click());
+
+        dropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropArea.classList.add('border-emerald-500', 'bg-emerald-50/30');
+        });
+
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('border-emerald-500', 'bg-emerald-50/30');
+        });
+
+        dropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropArea.classList.remove('border-emerald-500', 'bg-emerald-50/30');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    uploadedFiles.push(file);
+
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        addImagePreview(e.target.result, file.name);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            checkPredictButton();
+        }
+
+        function addImagePreview(src, name) {
+            imagePreviewGrid.classList.remove('hidden');
+
+            const previewItem = document.createElement('div');
+            previewItem.className = 'relative group';
+            previewItem.innerHTML = `
+                <div class="aspect-square bg-zinc-100 rounded-lg overflow-hidden border border-zinc-200">
+                    <img src="${src}" alt="Uploaded leaf image showing plant disease symptoms for AI analysis" class="w-full h-full object-cover">
+                </div>
+                <button
+                    class="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                    onclick="removeImage(this, '${name}')"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18"/>
+                        <path d="m6 6 12 12"/>
+                    </svg>
+                </button>
+                <p class="text-xs text-zinc-500 mt-2 truncate">${name}</p>
+            `;
+
+            imagePreviewGrid.appendChild(previewItem);
+        }
+
+        window.removeImage = function(button, fileName) {
+            uploadedFiles = uploadedFiles.filter(file => file.name !== fileName);
+            button.closest('.relative').remove();
+
+            if (uploadedFiles.length === 0) {
+                imagePreviewGrid.classList.add('hidden');
+            }
+
+            checkPredictButton();
+        };
+
+        function checkPredictButton() {
+            const allSelected = plantTypeSelect.value && diseaseTypeSelect.value && aiModelSelect.value;
+            const hasImages = uploadedFiles.length > 0;
+
+            if (allSelected && hasImages) {
+                predictBtn.disabled = false;
+                predictBtn.classList.remove('bg-zinc-300', 'cursor-not-allowed');
+                predictBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'cursor-pointer', 'hover:-translate-y-0.5', 'shadow-lg', 'hover:shadow-xl', 'hover:shadow-emerald-600/20');
+            } else {
+                predictBtn.disabled = true;
+                predictBtn.classList.add('bg-zinc-300', 'cursor-not-allowed');
+                predictBtn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700', 'cursor-pointer', 'hover:-translate-y-0.5', 'shadow-lg', 'hover:shadow-xl', 'hover:shadow-emerald-600/20');
+            }
+        }
+
+        // Predict button action
+        predictBtn.addEventListener('click', function() {
+            if (this.disabled) return;
+
+            // Show loading state
+            this.innerHTML = `
+                <span class="flex items-center justify-center gap-2">
+                    <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                    </svg>
+                    Analyzing Images...
+                </span>
+            `;
+            this.disabled = true;
+
+            // Simulate prediction (2 second delay)
+            setTimeout(() => {
+                showResults();
+
+                // Reset button
+                this.innerHTML = `
+                    <span class="flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                            <path d="M3 3v5h5"/>
+                            <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+                            <path d="M16 16h5v5"/>
+                        </svg>
+                        Predict Disease Level
+                    </span>
+                `;
+                checkPredictButton();
+            }, 2000);
+        });
+
+        function showResults(predictData = null) {
+            // Update results with selected disease
+            const diseaseLabel = document.getElementById('diseaseLabel');
+            const confidenceValue = document.getElementById('confidenceValue');
+            const confidenceCircle = document.getElementById('confidenceCircle');
+            const resultsSection = document.getElementById('resultsSection');
+            const referenceGrid = document.getElementById('referenceGrid');
+
+            if (predictData) {
+                diseaseLabel.textContent = predictData.class_label;
+                confidenceValue.textContent = `${Math.round(predictData.confidence * 100)}%`;
+                const circumference = 2 * Math.PI * 56;
+                const offset = circumference - (predictData.confidence) * circumference;
+                confidenceCircle.style.strokeDashoffset = offset;
+
+                // referenceGrid.innerHTML = predictData.images.map(i => `
+                //     <div class="bg-white border border-zinc-200 rounded-lg overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
+                //         <div class="aspect-square bg-zinc-100 overflow-hidden">
+                //             <img src="${i.url}" alt="${i.description}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                //         </div>
+                //         <div class="p-4"><p class="text-sm text-zinc-700 leading-relaxed">${i.description}</p></div>
+                //     </div>`).join('');
+            }
+
+            // Confidence: random 85-98%
+            // Show results section
+            resultsSection.classList.remove('hidden');
+
+            // Scroll to results
+            setTimeout(() => {
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+
+        // Scroll animation initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            if (plantTypeSelect.value) {
+                loadDiseaseTypes();
+            }
+
+            if (diseaseTypeSelect.value) {
+                aiModelSelect();
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Apply initial animation state
+            document.querySelectorAll('.animate-fade-up').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+
+                // Check if already visible
+                requestAnimationFrame(() => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
+                        el.style.opacity = '1';
+                        el.style.transform = 'translateY(0)';
+                    } else {
+                        observer.observe(el);
+                    }
+                });
+            });
+        });
+
+        async function loadDiseaseTypes() {
+            const plantId = plantTypeSelect.value;
+            if (!plantId) return;
+
+            const res = await fetch(`/api/site/disease-types/?plant=${plantId}`);
+            const data = await res.json();
+
+            diseaseTypeSelect.innerHTML = '<option value="">Select disease</option>';
+            aiModelSelect.innerHTML = '<option value="">Select model</option>';
+
+            data.forEach(d => {
+                diseaseTypeSelect.innerHTML += `<option value="${d.id}">${d.title}</option>`;
+            });
+        }
+        plantTypeSelect.addEventListener('change', loadDiseaseTypes);
+
+        async function loadModels() {
+            const diseaseId = diseaseTypeSelect.value;
+            if (!diseaseId) return;
+
+            const res = await fetch(`/api/site/models/?disease_type=${diseaseId}`);
+            const data = await res.json();
+
+            aiModelSelect.innerHTML = '<option value="">Select model</option>';
+
+            data.forEach(m => {
+                aiModelSelect.innerHTML += `<option value="${m.id}">${m.title}</option>`;
+            });
+        }
+        diseaseTypeSelect.addEventListener('change', loadModels);
+
+
+        document.getElementById('predictBtn').onclick = async () => {
+        const plant = plantTypeSelect.value;
+        const disease = diseaseTypeSelect.value;
+        const model = aiModelSelect.value;
+
+        if (!plant || !disease || !model) {
+            alert("Iltimos, barcha maydonlarni tanlang!");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("plant", plant);
+        formData.append("disease", disease);
+        formData.append("model", model);
+
+        // Add all uploaded files to formData
+        uploadedFiles.forEach(file => {
+            formData.append("image", file);
+        });
+
+        const res = await fetch('/api/site/predict/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                "X-CSRFToken": getCookie('csrftoken')
+            }
+        });
+
+        const data = await res.json();
+
+        // Natijani animatsiya bilan ko‘rsatish
+        showResults(data);
+    };
+
+
+        function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+}
+
+
+</script>
+
+
+<script id="dhws-dataInjector" src="{% static 'tailwind.config.js' %}"></script>
+</body>
+</html>

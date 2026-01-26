@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Plant Disease Detection</title>
+    <style>
+        body { font-family: Arial; max-width: 900px; margin: auto; }
+        header { font-size: 24px; font-weight: bold; margin: 20px 0; }
+        select, input { width: 100%; margin: 8px 0; padding: 8px; }
+        button { padding: 10px 20px; }
+        .result img { width: 150px; margin: 10px; }
+    </style>
+</head>
+<body>
+
+<header>Plant Disease Detection</header>
+
+<form id="predictForm">
+    <select id="plant">
+        <option value="">O‘simlik turini tanlang</option>
+        {% for p in plants %}
+            <option value="{{ p.id }}">{{ p.title }}</option>
+        {% endfor %}
+    </select>
+
+    <select id="disease"></select>
+    <select id="model"></select>
+
+    <input type="file" id="images" multiple>
+    <button type="submit">Yuborish</button>
+</form>
+
+<div class="result" id="result"></div>
+
+<script>
+document.getElementById('plant').onchange = function () {
+    fetch(`/api/site/disease-types/?plant=${this.value}`)
+        .then(r => r.json())
+        .then(data => {
+            let d = document.getElementById('disease');
+            d.innerHTML = '';
+            data.forEach(i => d.innerHTML += `<option value="${i.id}">${i.title}</option>`);
+        });
+};
+
+document.getElementById('disease').onchange = function () {
+    fetch(`/api/site/models/?disease_type=${this.value}`)
+        .then(r => r.json())
+        .then(data => {
+            let m = document.getElementById('model');
+            m.innerHTML = '';
+            data.forEach(i => m.innerHTML += `<option value="${i.id}">${i.title}</option>`);
+        });
+};
+
+document.getElementById('predictForm').onsubmit = function (e) {
+    e.preventDefault();
+    fetch('/api/services/site/predict/')
+        .then(r => r.json())
+        .then(data => {
+            let r = document.getElementById('result');
+            r.innerHTML = `<h3>${data.class_label}</h3>`;
+            data.images.forEach(i => {
+                r.innerHTML += `<div><img src="${i.url}"><p>${i.description}</p></div>`;
+            });
+        });
+};
+</script>
+
+</body>
+</html>

@@ -12,6 +12,8 @@ from config.settings import SHOW_SWAGGER
 from django.conf import settings
 from django.conf.urls.static import static
 
+from services.render_views import predict_page
+
 urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
     path('admin/', admin.site.urls),
@@ -21,8 +23,19 @@ urlpatterns = [
     path('api/', include('users.urls')),
     path('api/', include('services.urls')),
     path('api/', include('base.urls')),
+
+    path('', predict_page, name='predict_page'),
+
 ]
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )
+    urlpatterns += static(
+        settings.STATIC_URL,
+        document_root=settings.STATIC_ROOT
+    )
 
 
 if SHOW_SWAGGER:

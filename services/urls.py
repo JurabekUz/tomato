@@ -8,3 +8,13 @@ urlpatterns = [
     path('predicts/<int:pk>', UserPredictsRetrieveView.as_view(), name='predicts_detail'),
     path('predict', PredictView.as_view()),
 ]
+
+# urls.py
+from .render_views import get_disease_types, get_models, predict_view
+
+urlpatterns += [
+    path('site/disease-types/', get_disease_types),
+    path('site/models/', get_models),
+    path('site/predict/', predict_view),
+]
+
