@@ -162,3 +162,15 @@ cython_debug/
 #.idea/
 /model_data
 /media
+
+# Django static collect
+/static
+
+# Media
+/media/
+
+# Env
+.env
+__pycache__/
+*.pyc
+/static/

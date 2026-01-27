@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PlantDetect - AI-Powered Plant Disease Detection</title>
-    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static '../assets/css/main.css' %}">
   <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fplantdetec8814back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.12"></script>
   <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.2"></script>
   </head>
@@ -263,7 +263,7 @@
                             <div class="bg-white border border-zinc-200 rounded-lg overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
                                 <div class="aspect-square bg-zinc-100 overflow-hidden">
                                     <img
-                                        src="{% static 'model-images/cnn-acc.png' %}"
+                                        src="{% static '../assets/model-images/cnn-acc.png' %}"
                                         alt="Tomato leaf showing early stage of early blight disease with small circular lesions"
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     >
@@ -279,7 +279,7 @@
                             <div class="bg-white border border-zinc-200 rounded-lg overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
                                 <div class="aspect-square bg-zinc-100 overflow-hidden">
                                     <img
-                                        src="{% static 'model-images/cnn-loss.png' %}"
+                                        src="{% static '../assets/model-images/cnn-loss.png' %}"
                                         alt="Tomato plant with advanced early blight infection showing yellowing and browning leaves"
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     >
@@ -295,7 +295,7 @@
                             <div class="bg-white border border-zinc-200 rounded-lg overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
                                 <div class="aspect-square bg-zinc-100 overflow-hidden">
                                     <img
-                                        src="{% static 'model-images/cnn-main.png' %}"
+                                        src="{% static '../assets/model-images/cnn-main.png' %}"
                                         alt="Healthy tomato plant leaves for comparison showing no disease symptoms"
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     >
@@ -758,6 +758,6 @@
 </script>
 
 
-<script id="dhws-dataInjector" src="{% static 'tailwind.config.js' %}"></script>
+<script id="dhws-dataInjector" src="{% static '../assets/tailwind.config.js' %}"></script>
 </body>
 </html>

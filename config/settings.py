@@ -159,10 +159,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),   # CSS, JS shu yerda
+    os.path.join(BASE_DIR, 'assets'),   # CSS, JS shu yerda
 ]
 
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # collectstatic uchun
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')  # collectstatic uchun
 
 
 MEDIA_URL = '/media/'
