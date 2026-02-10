@@ -10,25 +10,29 @@ from services.prediction_service import PredictionService
 
 
 def predict_page(request):
-    return render(request, 'index.html', {
-        'plants': PlantType.objects.filter(is_active=True)
-    })
+    return render(
+        request, "index.html", {"plants": PlantType.objects.filter(is_active=True)}
+    )
+
+
+def predict_cotton_page(request):
+    return render(
+        request,
+        "cotton_index.html",
+        {"plants": PlantType.objects.filter(is_active=True)},
+    )
 
 
 def get_disease_types(request):
-    plant_id = request.GET.get('plant')
-    data = list(
-        DiseaseType.objects.filter(plant_id=plant_id)
-        .values('id', 'title')
-    )
+    plant_id = request.GET.get("plant")
+    data = list(DiseaseType.objects.filter(plant_id=plant_id).values("id", "title"))
     return JsonResponse(data, safe=False)
 
 
 def get_models(request):
-    disease_type_id = request.GET.get('disease_type')
+    disease_type_id = request.GET.get("disease_type")
     data = list(
-        DataModel.objects.filter(disease_type_id=disease_type_id)
-        .values('id', 'title')
+        DataModel.objects.filter(disease_type_id=disease_type_id).values("id", "title")
     )
     return JsonResponse(data, safe=False)
 
@@ -48,16 +52,20 @@ def predict_view(request):
 
         try:
             # model_instance = DataModel.objects.get(id=model_id)
-            model_instance = DataModel.objects.filter(code__iexact='cnn').first()
+            model_instance = DataModel.objects.filter(code__iexact="cnn").first()
             prediction_service = PredictionService()
-            data_class, confidence = prediction_service.predict(image_files, model_instance)
+            data_class, confidence = prediction_service.predict(
+                image_files, model_instance
+            )
 
             # The prediction_result should contain class_label, description, and image URLs
-            return JsonResponse({
-                "class_label": data_class.title,
-                "description": data_class.description,
-                "confidence": float(confidence)
-            })
+            return JsonResponse(
+                {
+                    "class_label": data_class.title,
+                    "description": data_class.description,
+                    "confidence": float(confidence),
+                }
+            )
 
         except DataModel.DoesNotExist:
             return JsonResponse({"error": "Model not found"}, status=404)

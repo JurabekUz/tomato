@@ -9,8 +9,9 @@ urlpatterns = [
     path('predict', PredictView.as_view()),
 ]
 
-# urls.py
+
 from .render_views import get_disease_types, get_models, predict_view
+
 
 urlpatterns += [
     path('site/disease-types/', get_disease_types),

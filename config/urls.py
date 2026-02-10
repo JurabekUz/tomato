@@ -12,7 +12,7 @@ from config.settings import SHOW_SWAGGER
 from django.conf import settings
 from django.conf.urls.static import static
 
-from services.render_views import predict_page
+from services.render_views import predict_page, predict_cotton_page
 
 urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
@@ -24,6 +24,8 @@ urlpatterns = [
     path('api/', include('services.urls')),
     path('api/', include('base.urls')),
 
+
+    path('cotton/', predict_cotton_page, name='predict_cotton_page'),
     path('', predict_page, name='predict_page'),
 
 ]
