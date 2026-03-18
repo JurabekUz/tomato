@@ -54,7 +54,7 @@ def predict_view(request):
             # model_instance = DataModel.objects.get(id=model_id)
             model_instance = DataModel.objects.filter(code__iexact="cnn").first()
             prediction_service = PredictionService()
-            data_class, confidence = prediction_service.predict(
+            data_class, confidence = prediction_service.predict_tomato_model(
                 image_files, model_instance
             )
 

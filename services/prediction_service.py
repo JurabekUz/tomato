@@ -135,3 +135,56 @@ class PredictionService:
         class_label = np.argmax(predictions, axis=1)[0]
         confidence = np.max(predictions)
         return class_label, confidence
+
+    def predict_tomato_model(self, images, data_model):
+        from pathlib import Path
+        BASE_DIR = Path(__file__).resolve().parent.parent
+        model_file_path = BASE_DIR / "model_src" / "tomato_model.h5"
+
+        try:
+            model = tf.keras.models.load_model(str(model_file_path))
+        except (IOError, ValueError) as e:
+            raise CommonException(_(f"Modelni yuklashda xatolik yuz berdi: {e}"))
+
+        predictions = []
+        confidences = []
+        for image_file in images:
+            try:
+                if hasattr(image_file, 'seek'):
+                    image_file.seek(0)
+                image_stream = image_file.read()
+                if hasattr(image_file, 'seek'):
+                    image_file.seek(0)
+                
+                image = np.frombuffer(image_stream, np.uint8)
+                image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+                if image is None:
+                    raise CommonException(_("Rasm bilan ishlashda xatolik"))
+                
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                image = cv2.resize(image, (224, 224))
+                image = image.astype(np.float32) / 255.0
+                image = np.expand_dims(image, axis=0)
+
+                pred = model.predict(image)[0]
+                class_label = int(np.argmax(pred))
+                confidence = float(np.max(pred))
+                predictions.append(class_label)
+                confidences.append(confidence)
+            except Exception as e:
+                print(f"Xatolik: {e}")
+                raise CommonException(_("Rasm bilan ishlashda xatolik, iltimos yaxshiroq formatdagi rasm yuboring"))
+
+        try:
+            most_common = Counter(predictions).most_common(1)[0][0]
+            relevant_confidences = [conf for pred, conf in zip(predictions, confidences) if pred == most_common]
+            avg_confidence = float(sum(relevant_confidences) / len(relevant_confidences))
+        except IndexError:
+            raise CommonException(_("Rasm kasalligi topilmadi, Uzr so'raymiz"))
+
+        try:
+            data_class = data_model.disease_type.disease_levels.get(index=most_common)
+        except DiseaseLevel.DoesNotExist:
+            raise CommonException(_("Kasallik darajasi topilmadi (Label not found)"))
+
+        return data_class, avg_confidence

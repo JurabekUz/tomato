@@ -7,11 +7,9 @@ from rest_framework import status
 from django.utils.translation import gettext_lazy as _
 
 from model.models import DataModel
-from base.models import DiseaseType, DiseaseLevel
 from utils.exceptions import CommonException
 from utils.pagination import CommonPagination
 from .serializers import PredictListSerializer, PredictRetrieveSerializer, PredictSerializer, PredictResponseSerializer
-import numpy as np
 
 from .models import Predict, PredictImages
 from .prediction_service import PredictionService
@@ -51,14 +49,14 @@ class PredictView(APIView):
         serializer.is_valid(raise_exception=True)
         data = serializer.data
         try:
-            # data_model = DataModel.objects.get(id=data['data_model'])
-            data_model = DataModel.objects.filter(code__iexact='cnn').first()
+            data_model = DataModel.objects.get(id=data['data_model'])
+            # data_model = DataModel.objects.filter(code__iexact='cnn').first()
             images = self.request.FILES.getlist('images')
         except:
             raise CommonException(_("Nazarda tutilmagan xatolik yuz berdi."))
 
         prediction_service = PredictionService()
-        data_class, confidence = prediction_service.predict(images, data_model)
+        data_class, confidence = prediction_service.predict_tomato_model(images, data_model)
 
         predict = Predict.objects.create(
             user=request.user, 
